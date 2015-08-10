@@ -44,4 +44,7 @@ setup(
     ],
     packages=['syslogmp'],
     install_requires=install_requires,
+    extras_require={
+        'test': ['nose2', 'tox'],
+    },
 )
