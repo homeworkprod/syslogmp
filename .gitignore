@@ -6,6 +6,7 @@ __pycache__/
 venv/
 
 # packaging/distribution
+build/
 dist/
 *.egg-info/
 
