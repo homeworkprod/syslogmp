@@ -1,0 +1,13 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# virtual environment
+venv/
+
+# packaging/distribution
+dist/
+*.egg-info/
+
+# testing
+.tox/
