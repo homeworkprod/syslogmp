@@ -7,7 +7,8 @@ syslogmp.parser
 For more information, see `RFC 3164`_, "The BSD syslog Protocol".
 
 Please note that there is `RFC 5424`_, "The Syslog Protocol", which
-obsoletes `RFC 3164`_. syslog2IRC, however, only implements the latter.
+obsoletes `RFC 3164`_. This package, however, only implements the
+latter.
 
 .. _RFC 3164: http://tools.ietf.org/html/rfc3164
 .. _RFC 5424: http://tools.ietf.org/html/rfc5424

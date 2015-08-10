@@ -53,7 +53,8 @@ Further Reading
 For more information, see `RFC 3164`_, "The BSD syslog Protocol".
 
 Please note that there is `RFC 5424`_, "The Syslog Protocol", which
-obsoletes `RFC 3164`_. syslog2IRC, however, only implements the latter.
+obsoletes `RFC 3164`_. This package, however, only implements the
+latter.
 
 
 .. _syslog2IRC: http://homework.nwsnet.de/releases/c474/#syslog2irc
