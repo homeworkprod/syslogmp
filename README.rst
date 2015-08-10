@@ -3,6 +3,8 @@ syslogmp
 
 A parser for BSD syslog protocol (RFC 3164) messages
 
+This library was extracted from syslog2IRC_.
+
 
 Requirements
 ------------
@@ -54,10 +56,11 @@ Please note that there is `RFC 5424`_, "The Syslog Protocol", which
 obsoletes `RFC 3164`_. syslog2IRC, however, only implements the latter.
 
 
-.. _enum34:   https://pypi.python.org/pypi/enum34
-.. _pip:      http://www.pip-installer.org/
-.. _RFC 3164: http://tools.ietf.org/html/rfc3164
-.. _RFC 5424: http://tools.ietf.org/html/rfc5424
+.. _syslog2IRC: http://homework.nwsnet.de/releases/c474/#syslog2irc
+.. _enum34:     https://pypi.python.org/pypi/enum34
+.. _pip:        http://www.pip-installer.org/
+.. _RFC 3164:   http://tools.ietf.org/html/rfc3164
+.. _RFC 5424:   http://tools.ietf.org/html/rfc5424
 
 
 :Copyright: 2007-2015 Jochen Kupperschmidt
