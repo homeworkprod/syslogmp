@@ -20,12 +20,8 @@ Install this package via pip_:
 
     $ pip install syslogmp
 
-As of Python 3.4, an enum module is part of the standard library. For
-older versions of Python, install the enum34_ module:
-
-.. code:: sh
-
-    $ pip install enum34
+On Python versions before 3.4, the enum34_ package should be installed
+automatically.
 
 
 Usage

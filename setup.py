@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
 
 import codecs
+import sys
+
 from setuptools import setup
 
 
 with codecs.open('README.rst', encoding='utf-8') as f:
     long_description = f.read()
+
+
+# Require the 'enum34' package on Python versions before 3.4.
+install_requires = []
+if sys.version_info[:2] < (3, 4):
+    install_requires.append('enum34')
 
 
 setup(
@@ -35,4 +43,5 @@ setup(
         'Topic :: System :: Systems Administration',
     ],
     packages=['syslogmp'],
+    install_requires=install_requires,
 )
