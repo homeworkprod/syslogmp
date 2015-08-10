@@ -21,7 +21,7 @@ setup(
     version='0.0',
     description='A parser for BSD syslog protocol (RFC 3164) messages',
     long_description=long_description,
-    url='http://homework.nwsnet.de/',
+    url='http://homework.nwsnet.de/releases/76d6/#syslogmp',
     author='Jochen Kupperschmidt',
     author_email='homework@nwsnet.de',
     license='MIT',
