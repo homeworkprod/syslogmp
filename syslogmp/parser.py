@@ -38,22 +38,22 @@ class Parser(object):
         severity = Severity(severity_id)
         timestamp = parser._parse_timestamp()
         hostname = parser._parse_hostname()
-        message = ''.join(parser.data_iter)
+        message = ''.join(parser.iterator.take_remainder())
 
         return Message(facility, severity, timestamp, hostname, message)
 
     def __init__(self, data):
         max_bytes = 1024  # as stated by the RFC
-        self.data_iter = iter(data[:max_bytes])
+        self.iterator = DataIterator(data[:max_bytes])
 
     def _parse_priority_value(self):
         """Parse the priority value to extract facility and severity
         IDs.
         """
-        start_delim = self._take_slice(1)
+        start_delim = self.iterator.take(1)
         assert start_delim == '<'
 
-        priority_value = self._take_until('>')
+        priority_value = self.iterator.take_until('>')
         assert len(priority_value) in {1, 2, 3}
 
         facility_id, severity_id = divmod(int(priority_value), 8)
@@ -61,8 +61,8 @@ class Parser(object):
 
     def _parse_timestamp(self):
         """Parse timestamp into a `datetime` instance."""
-        timestamp_str = self._take_slice(15)
-        nothing = self._take_until(' ')  # Advance to next part.
+        timestamp_str = self.iterator.take(15)
+        nothing = self.iterator.take_until(' ')  # Advance to next part.
         assert nothing == ''
 
         timestamp = datetime.strptime(timestamp_str, '%b %d %H:%M:%S')
@@ -70,10 +70,25 @@ class Parser(object):
         return timestamp
 
     def _parse_hostname(self):
-        return self._take_until(' ')
+        return self.iterator.take_until(' ')
 
-    def _take_until(self, value):
-        return ''.join(takewhile(lambda c: c != value, self.data_iter))
 
-    def _take_slice(self, n):
-        return ''.join(islice(self.data_iter, n))
+class DataIterator(object):
+
+    def __init__(self, data):
+        self.iterator = iter(data)
+
+    def take_until(self, stop_character):
+        """Return characters until the first occurrence of the stop
+        character.
+        """
+        predicate = lambda c: c != stop_character
+        return ''.join(takewhile(predicate, self.iterator))
+
+    def take(self, n):
+        """Return the next `n` characters."""
+        return ''.join(islice(self.iterator, n))
+
+    def take_remainder(self):
+        """Return all remaining characters."""
+        return self.iterator
