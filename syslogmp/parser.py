@@ -35,20 +35,19 @@ class Parser(object):
         parser = cls(data)
 
         priority_value = parser._parse_pri_part()
-        facility = Facility(priority_value.facility_id)
-        severity = Severity(priority_value.severity_id)
         timestamp = parser._parse_timestamp()
         hostname = parser._parse_hostname()
         message = ''.join(parser.iterator.take_remainder())
 
-        return Message(facility, severity, timestamp, hostname, message)
+        return Message(priority_value.facility, priority_value.severity,
+                       timestamp, hostname, message)
 
     def __init__(self, data):
         max_bytes = 1024  # as stated by the RFC
         self.iterator = DataIterator(data[:max_bytes])
 
     def _parse_pri_part(self):
-        """Extract facility and severity IDs from the PRI part."""
+        """Extract facility and severity from the PRI part."""
         pri_part = self.iterator.take_until_inclusive('>')
 
         return PriorityValue.from_pri_part(pri_part)
@@ -116,7 +115,7 @@ def ensure(expression, error_message):
         raise MessageFormatError(error_message)
 
 
-class PriorityValue(namedtuple('PriorityValue', 'facility_id severity_id')):
+class PriorityValue(namedtuple('PriorityValue', 'facility severity')):
 
     @classmethod
     def from_pri_part(cls, pri_part):
@@ -141,4 +140,7 @@ class PriorityValue(namedtuple('PriorityValue', 'facility_id severity_id')):
 
         facility_id, severity_id = divmod(priority_value_number, 8)
 
-        return cls(facility_id, severity_id)
+        facility = Facility(facility_id)
+        severity = Severity(severity_id)
+
+        return cls(facility, severity)
