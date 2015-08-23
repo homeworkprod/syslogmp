@@ -18,6 +18,7 @@ latter.
 :License: MIT, see LICENSE for details.
 """
 
+from collections import namedtuple
 from datetime import datetime
 from itertools import islice, takewhile
 
@@ -33,9 +34,9 @@ class Parser(object):
     def parse(cls, data):
         parser = cls(data)
 
-        facility_id, severity_id = parser._parse_pri_part()
-        facility = Facility(facility_id)
-        severity = Severity(severity_id)
+        priority_value = parser._parse_pri_part()
+        facility = Facility(priority_value.facility_id)
+        severity = Severity(priority_value.severity_id)
         timestamp = parser._parse_timestamp()
         hostname = parser._parse_hostname()
         message = ''.join(parser.iterator.take_remainder())
@@ -50,26 +51,7 @@ class Parser(object):
         """Extract facility and severity IDs from the PRI part."""
         pri_part = self.iterator.take_until_inclusive('>')
 
-        ensure(len(pri_part) in {3, 4, 5},
-               'PRI part must have 3, 4, or 5 characters.')
-
-        ensure(pri_part.startswith('<'),
-               'PRI part must start with an opening angle bracket (`<`).')
-
-        ensure(pri_part.endswith('>'),
-               'PRI part must end with a closing angle bracket (`>`).')
-
-        priority_value = pri_part[1:-1]
-
-        try:
-            priority_value_number = int(priority_value)
-        except ValueError:
-            raise MessageFormatError(
-                "Priority value must be a number, but is '{}'."
-                    .format(priority_value))
-
-        facility_id, severity_id = divmod(priority_value_number, 8)
-        return facility_id, severity_id
+        return PriorityValue.from_pri_part(pri_part)
 
     def _parse_timestamp(self):
         """Parse timestamp into a `datetime` instance."""
@@ -132,3 +114,31 @@ def ensure(expression, error_message):
     """Raise exception if the expression evaluates to `False`."""
     if not expression:
         raise MessageFormatError(error_message)
+
+
+class PriorityValue(namedtuple('PriorityValue', 'facility_id severity_id')):
+
+    @classmethod
+    def from_pri_part(cls, pri_part):
+        """Create instance from PRI part."""
+        ensure(len(pri_part) in {3, 4, 5},
+               'PRI part must have 3, 4, or 5 characters.')
+
+        ensure(pri_part.startswith('<'),
+               'PRI part must start with an opening angle bracket (`<`).')
+
+        ensure(pri_part.endswith('>'),
+               'PRI part must end with a closing angle bracket (`>`).')
+
+        priority_value = pri_part[1:-1]
+
+        try:
+            priority_value_number = int(priority_value)
+        except ValueError:
+            raise MessageFormatError(
+                "Priority value must be a number, but is '{}'."
+                    .format(priority_value))
+
+        facility_id, severity_id = divmod(priority_value_number, 8)
+
+        return cls(facility_id, severity_id)
