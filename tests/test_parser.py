@@ -94,6 +94,10 @@ class ParseTestCase(TestCase):
         ('<0123>Nov 14 12:34:56 localhost foobar'), # priority value too long
         ('<abc>Nov 14 12:34:56 localhost foobar' ), # priority value not a number
         ('<165>Nov 14 12:34:56localhost foobar'  ), # no space after timestamp
+
+        # Example 4 from RFC 3164
+        # Cannot be parsed because TIMESTAMP field format is invalid.
+        ('<0>1990 Oct 22 10:52:01 TZ-6 scapegoat.dmz.example.org 10.1.2.3 sched[0]: That\'s All Folks!'),
     )
     def test_parse_erroneous_message(self, data):
         with self.assertRaises(MessageFormatError):
