@@ -33,7 +33,7 @@ class Parser(object):
     def parse(cls, data):
         parser = cls(data)
 
-        facility_id, severity_id = parser._parse_priority_value()
+        facility_id, severity_id = parser._parse_pri_part()
         facility = Facility(facility_id)
         severity = Severity(severity_id)
         timestamp = parser._parse_timestamp()
@@ -46,17 +46,20 @@ class Parser(object):
         max_bytes = 1024  # as stated by the RFC
         self.iterator = DataIterator(data[:max_bytes])
 
-    def _parse_priority_value(self):
-        """Parse the priority value to extract facility and severity
-        IDs.
-        """
-        start_delim = self.iterator.take(1)
-        ensure(start_delim == '<',
-               'Message must start with an opening angle bracket (`<`).')
+    def _parse_pri_part(self):
+        """Extract facility and severity IDs from the PRI part."""
+        pri_part = self.iterator.take_until_inclusive('>')
 
-        priority_value = self.iterator.take_until('>')
-        ensure(len(priority_value) in {1, 2, 3},
-               'The priority value must consist of 1, 2, or 3 digits.')
+        ensure(len(pri_part) in {3, 4, 5},
+               'PRI part must have 3, 4, or 5 characters.')
+
+        ensure(pri_part.startswith('<'),
+               'PRI part must start with an opening angle bracket (`<`).')
+
+        ensure(pri_part.endswith('>'),
+               'PRI part must end with a closing angle bracket (`>`).')
+
+        priority_value = pri_part[1:-1]
 
         try:
             priority_value_number = int(priority_value)
@@ -95,6 +98,19 @@ class DataIterator(object):
         """
         predicate = lambda c: c != stop_character
         return ''.join(takewhile(predicate, self.iterator))
+
+    def take_until_inclusive(self, stop_character):
+        """Return characters until, and including, the first occurrence
+        of the stop character.
+        """
+        def inner():
+            predicate = lambda c: c != stop_character
+            for x in self.iterator:
+                yield x
+                if not predicate(x):
+                    return
+
+        return ''.join(inner())
 
     def take(self, n):
         """Return the next `n` characters."""
