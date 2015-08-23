@@ -12,6 +12,7 @@ from unittest import TestCase
 from nose2.tools import params
 
 from syslogmp import Facility, parse, Severity
+from syslogmp.parser import MessageFormatError
 
 
 CURRENT_YEAR = datetime.today().year
@@ -85,3 +86,15 @@ class ParseTestCase(TestCase):
         self.assertEqual(actual.timestamp, expected_timestamp)
         self.assertEqual(actual.hostname, expected_hostname)
         self.assertEqual(actual.message, expected_message)
+
+    @params(
+        ('165>Nov 14 12:34:56 localhost foobar'  ), # PRI part not starting with '<'
+        ('<165 Nov 14 12:34:56 localhost foobar' ), # PRI part not ending with '>'
+        ('<>Nov 14 12:34:56 localhost foobar'    ), # priority value too short
+        ('<0123>Nov 14 12:34:56 localhost foobar'), # priority value too long
+        ('<abc>Nov 14 12:34:56 localhost foobar' ), # priority value not a number
+        ('<165>Nov 14 12:34:56localhost foobar'  ), # no space after timestamp
+    )
+    def test_parse_erroneous_message(self, data):
+        with self.assertRaises(MessageFormatError):
+            parse(data)

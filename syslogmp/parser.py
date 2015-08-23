@@ -51,19 +51,30 @@ class Parser(object):
         IDs.
         """
         start_delim = self.iterator.take(1)
-        assert start_delim == '<'
+        ensure(start_delim == '<',
+               'Message must start with an opening angle bracket (`<`).')
 
         priority_value = self.iterator.take_until('>')
-        assert len(priority_value) in {1, 2, 3}
+        ensure(len(priority_value) in {1, 2, 3},
+               'The priority value must consist of 1, 2, or 3 digits.')
 
-        facility_id, severity_id = divmod(int(priority_value), 8)
+        try:
+            priority_value_number = int(priority_value)
+        except ValueError:
+            raise MessageFormatError(
+                "Priority value must be a number, but is '{}'."
+                    .format(priority_value))
+
+        facility_id, severity_id = divmod(priority_value_number, 8)
         return facility_id, severity_id
 
     def _parse_timestamp(self):
         """Parse timestamp into a `datetime` instance."""
         timestamp_str = self.iterator.take(15)
+
         nothing = self.iterator.take_until(' ')  # Advance to next part.
-        assert nothing == ''
+        ensure(nothing == '',
+               'Timestamp must be followed by a space character.')
 
         timestamp = datetime.strptime(timestamp_str, '%b %d %H:%M:%S')
         timestamp = timestamp.replace(year=datetime.today().year)
@@ -92,3 +103,16 @@ class DataIterator(object):
     def take_remainder(self):
         """Return all remaining characters."""
         return self.iterator
+
+
+class MessageFormatError(ValueError):
+    """Raised when data does not match the expected message structure."""
+
+    def __init__(self, message):
+        self.message = message
+
+
+def ensure(expression, error_message):
+    """Raise exception if the expression evaluates to `False`."""
+    if not expression:
+        raise MessageFormatError(error_message)
