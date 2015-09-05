@@ -47,6 +47,15 @@ class StreamTestCase(TestCase):
         actual = stream.read_until(stop_character)
         self.assertEqual(actual, expected)
 
+    def test_read_until_drops_stop_character(self):
+        stream = Stream('abcdef')
+
+        until = stream.read_until('d')
+        self.assertEqual(until, 'abc')
+
+        remainder = stream.read_remainder()
+        self.assertEqual(remainder, 'ef')
+
     @params(
         ('abcdef', 'a', 'a'     ),
         ('abcdef', 'b', 'ab'    ),

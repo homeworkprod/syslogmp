@@ -26,6 +26,9 @@ class Stream(object):
     def read_until(self, stop_character):
         """Return characters until the first occurrence of the stop
         character.
+
+        The stop character is not returned, but silently dropped from
+        the remaining stream data.
         """
         predicate = lambda c: c != stop_character
         return ''.join(takewhile(predicate, self.iterator))
