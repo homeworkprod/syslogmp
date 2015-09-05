@@ -37,7 +37,7 @@ class Parser(object):
         priority_value = parser._parse_pri_part()
         timestamp = parser._parse_timestamp()
         hostname = parser._parse_hostname()
-        message = ''.join(parser.stream.read_remainder())
+        message = parser.stream.read_remainder()
 
         return Message(priority_value.facility, priority_value.severity,
                        timestamp, hostname, message)

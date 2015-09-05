@@ -45,4 +45,4 @@ class Stream(object):
 
     def read_remainder(self):
         """Return all remaining characters."""
-        return self.iterator
+        return ''.join(self.iterator)
