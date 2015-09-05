@@ -37,7 +37,7 @@ class Parser(object):
         priority_value = parser._parse_pri_part()
         timestamp = parser._parse_timestamp()
         hostname = parser._parse_hostname()
-        message = ''.join(parser.stream.take_remainder())
+        message = ''.join(parser.stream.read_remainder())
 
         return Message(priority_value.facility, priority_value.severity,
                        timestamp, hostname, message)
@@ -48,15 +48,15 @@ class Parser(object):
 
     def _parse_pri_part(self):
         """Extract facility and severity from the PRI part."""
-        pri_part = self.stream.take_until_inclusive('>')
+        pri_part = self.stream.read_until_inclusive('>')
 
         return PriorityValue.from_pri_part(pri_part)
 
     def _parse_timestamp(self):
         """Parse timestamp into a `datetime` instance."""
-        timestamp_str = self.stream.take(15)
+        timestamp_str = self.stream.read(15)
 
-        nothing = self.stream.take_until(' ')  # Advance to next part.
+        nothing = self.stream.read_until(' ')  # Advance to next part.
         ensure(nothing == '',
                'Timestamp must be followed by a space character.')
 
@@ -65,7 +65,7 @@ class Parser(object):
         return timestamp
 
     def _parse_hostname(self):
-        return self.stream.take_until(' ')
+        return self.stream.read_until(' ')
 
 
 class Stream(object):
@@ -73,14 +73,14 @@ class Stream(object):
     def __init__(self, data):
         self.iterator = iter(data)
 
-    def take_until(self, stop_character):
+    def read_until(self, stop_character):
         """Return characters until the first occurrence of the stop
         character.
         """
         predicate = lambda c: c != stop_character
         return ''.join(takewhile(predicate, self.iterator))
 
-    def take_until_inclusive(self, stop_character):
+    def read_until_inclusive(self, stop_character):
         """Return characters until, and including, the first occurrence
         of the stop character.
         """
@@ -93,11 +93,11 @@ class Stream(object):
 
         return ''.join(inner())
 
-    def take(self, n):
+    def read(self, n):
         """Return the next `n` characters."""
         return ''.join(islice(self.iterator, n))
 
-    def take_remainder(self):
+    def read_remainder(self):
         """Return all remaining characters."""
         return self.iterator
 
