@@ -37,26 +37,26 @@ class Parser(object):
         priority_value = parser._parse_pri_part()
         timestamp = parser._parse_timestamp()
         hostname = parser._parse_hostname()
-        message = ''.join(parser.iterator.take_remainder())
+        message = ''.join(parser.stream.take_remainder())
 
         return Message(priority_value.facility, priority_value.severity,
                        timestamp, hostname, message)
 
     def __init__(self, data):
         max_bytes = 1024  # as stated by the RFC
-        self.iterator = DataIterator(data[:max_bytes])
+        self.stream = Stream(data[:max_bytes])
 
     def _parse_pri_part(self):
         """Extract facility and severity from the PRI part."""
-        pri_part = self.iterator.take_until_inclusive('>')
+        pri_part = self.stream.take_until_inclusive('>')
 
         return PriorityValue.from_pri_part(pri_part)
 
     def _parse_timestamp(self):
         """Parse timestamp into a `datetime` instance."""
-        timestamp_str = self.iterator.take(15)
+        timestamp_str = self.stream.take(15)
 
-        nothing = self.iterator.take_until(' ')  # Advance to next part.
+        nothing = self.stream.take_until(' ')  # Advance to next part.
         ensure(nothing == '',
                'Timestamp must be followed by a space character.')
 
@@ -65,10 +65,10 @@ class Parser(object):
         return timestamp
 
     def _parse_hostname(self):
-        return self.iterator.take_until(' ')
+        return self.stream.take_until(' ')
 
 
-class DataIterator(object):
+class Stream(object):
 
     def __init__(self, data):
         self.iterator = iter(data)
