@@ -20,11 +20,11 @@ latter.
 
 from collections import namedtuple
 from datetime import datetime
-from itertools import islice, takewhile
 
 from .facility import Facility
 from .message import Message
 from .severity import Severity
+from .stream import Stream
 
 
 class Parser(object):
@@ -66,40 +66,6 @@ class Parser(object):
 
     def _parse_hostname(self):
         return self.stream.read_until(' ')
-
-
-class Stream(object):
-
-    def __init__(self, data):
-        self.iterator = iter(data)
-
-    def read_until(self, stop_character):
-        """Return characters until the first occurrence of the stop
-        character.
-        """
-        predicate = lambda c: c != stop_character
-        return ''.join(takewhile(predicate, self.iterator))
-
-    def read_until_inclusive(self, stop_character):
-        """Return characters until, and including, the first occurrence
-        of the stop character.
-        """
-        def inner():
-            predicate = lambda c: c != stop_character
-            for x in self.iterator:
-                yield x
-                if not predicate(x):
-                    return
-
-        return ''.join(inner())
-
-    def read(self, n):
-        """Return the next `n` characters."""
-        return ''.join(islice(self.iterator, n))
-
-    def read_remainder(self):
-        """Return all remaining characters."""
-        return self.iterator
 
 
 class MessageFormatError(ValueError):
