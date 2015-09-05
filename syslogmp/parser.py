@@ -4,6 +4,12 @@
 syslogmp.parser
 ~~~~~~~~~~~~~~~
 
+A message consists of three parts:
+
+- PRI (facility, severity)
+- HEADER (timestamp, hostname/IP address)
+- MSG (additional information, text)
+
 For more information, see `RFC 3164`_, "The BSD syslog Protocol".
 
 Please note that there is `RFC 5424`_, "The Syslog Protocol", which
@@ -35,9 +41,8 @@ class Parser(object):
         parser = cls(data)
 
         priority_value = parser._parse_pri_part()
-        timestamp = parser._parse_timestamp()
-        hostname = parser._parse_hostname()
-        message = parser.stream.read_remainder()
+        timestamp, hostname = parser._parse_header_part()
+        message = parser._parse_msg_part()
 
         return Message(priority_value.facility, priority_value.severity,
                        timestamp, hostname, message)
@@ -51,6 +56,12 @@ class Parser(object):
         pri_part = self.stream.read_until_inclusive('>')
 
         return PriorityValue.from_pri_part(pri_part)
+
+    def _parse_header_part(self):
+        """Extract timestamp and hostname from the HEADER part."""
+        timestamp = self._parse_timestamp()
+        hostname = self._parse_hostname()
+        return timestamp, hostname
 
     def _parse_timestamp(self):
         """Parse timestamp into a `datetime` instance."""
@@ -66,6 +77,9 @@ class Parser(object):
 
     def _parse_hostname(self):
         return self.stream.read_until(' ')
+
+    def _parse_msg_part(self):
+        return self.stream.read_remainder()
 
 
 class MessageFormatError(ValueError):
