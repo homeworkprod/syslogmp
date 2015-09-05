@@ -2,8 +2,8 @@ syslogmp Changelog
 ==================
 
 
-Version 0.2 (released on 23-Aug-2015)
--------------------------------------
+Version 0.2 (not yet released)
+------------------------------
 
 - Raise custom exception on message parsing errors instead of using
   assertions.
