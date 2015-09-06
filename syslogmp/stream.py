@@ -29,7 +29,7 @@ class Stream(object):
         The stop byte is not returned, but silently dropped from the
         remaining stream data.
         """
-        predicate = create_match_predicate(ord(stop_byte))
+        predicate = create_match_predicate(stop_byte)
         return self._join(takewhile(predicate, self.iterator))
 
     def read_until_inclusive(self, stop_byte):
@@ -37,7 +37,7 @@ class Stream(object):
         the stop byte.
         """
         def inner():
-            predicate = create_match_predicate(ord(stop_byte))
+            predicate = create_match_predicate(stop_byte)
             for x in self.iterator:
                 yield x
                 if not predicate(x):
@@ -54,4 +54,4 @@ class Stream(object):
 
 
 def create_match_predicate(value_to_match):
-    return lambda x: x != value_to_match
+    return lambda x: x != ord(value_to_match)
