@@ -13,6 +13,8 @@ Treat binary data as a stream and provide methods to read from it.
 
 from itertools import islice, takewhile
 
+from .compat import PYTHON3
+
 
 class Stream(object):
 
@@ -50,8 +52,14 @@ class Stream(object):
         return self._join(self.iterator)
 
     def _join(self, iterable):
-        return bytes(iterable)
+        if PYTHON3:
+            return bytes(iterable)
+        else:
+            return ''.join(iterable)
 
 
 def create_match_predicate(value_to_match):
-    return lambda x: x != ord(value_to_match)
+    if PYTHON3:
+        value_to_match = ord(value_to_match)
+
+    return lambda x: x != value_to_match
