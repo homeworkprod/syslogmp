@@ -71,12 +71,17 @@ class Parser(object):
         timestamp_bytes = self.stream.read(15)
         timestamp_ascii = timestamp_bytes.decode('ascii')
 
+        try:
+            timestamp = datetime.strptime(timestamp_ascii, '%b %d %H:%M:%S')
+        except ValueError as e:
+            raise MessageFormatError(e)
+
+        timestamp = timestamp.replace(year=datetime.today().year)
+
         nothing = self.stream.read_until(b' ')  # Advance to next part.
         ensure(nothing == b'',
                'Timestamp must be followed by a space character.')
 
-        timestamp = datetime.strptime(timestamp_ascii, '%b %d %H:%M:%S')
-        timestamp = timestamp.replace(year=datetime.today().year)
         return timestamp
 
     def _parse_hostname(self):
