@@ -21,7 +21,7 @@ class Stream(object):
 
     def read(self, n):
         """Return the next `n` characters."""
-        return ''.join(islice(self.iterator, n))
+        return self._join(islice(self.iterator, n))
 
     def read_until(self, stop_character):
         """Return characters until the first occurrence of the stop
@@ -31,7 +31,7 @@ class Stream(object):
         the remaining stream data.
         """
         predicate = lambda c: c != stop_character
-        return ''.join(takewhile(predicate, self.iterator))
+        return self._join(takewhile(predicate, self.iterator))
 
     def read_until_inclusive(self, stop_character):
         """Return characters until, and including, the first occurrence
@@ -44,8 +44,11 @@ class Stream(object):
                 if not predicate(x):
                     return
 
-        return ''.join(inner())
+        return self._join(inner())
 
     def read_remainder(self):
         """Return all remaining characters."""
-        return ''.join(self.iterator)
+        return self._join(self.iterator)
+
+    def _join(self, iterable):
+        return ''.join(iterable)
