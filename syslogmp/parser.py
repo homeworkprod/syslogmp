@@ -63,7 +63,14 @@ class Parser(object):
     def _parse_header_part(self):
         """Extract timestamp and hostname from the HEADER part."""
         timestamp = self._parse_timestamp()
+
+        # Advance to hostname.
+        nothing = self.stream.read_until(b' ')
+        ensure(nothing == b'',
+               'Timestamp must be followed by a space character.')
+
         hostname = self._parse_hostname()
+
         return timestamp, hostname
 
     def _parse_timestamp(self):
@@ -77,10 +84,6 @@ class Parser(object):
             raise MessageFormatError(e)
 
         timestamp = timestamp.replace(year=datetime.today().year)
-
-        nothing = self.stream.read_until(b' ')  # Advance to next part.
-        ensure(nothing == b'',
-               'Timestamp must be followed by a space character.')
 
         return timestamp
 
