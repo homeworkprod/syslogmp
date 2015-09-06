@@ -4,7 +4,7 @@
 syslogmp.stream
 ~~~~~~~~~~~~~~~
 
-Treat character data as a stream and provide methods to read from it.
+Treat binary data as a stream and provide methods to read from it.
 
 
 :Copyright: 2007-2015 Jochen Kupperschmidt
@@ -20,25 +20,24 @@ class Stream(object):
         self.iterator = iter(data)
 
     def read(self, n):
-        """Return the next `n` characters."""
+        """Return the next `n` bytes."""
         return self._join(islice(self.iterator, n))
 
-    def read_until(self, stop_character):
-        """Return characters until the first occurrence of the stop
-        character.
+    def read_until(self, stop_byte):
+        """Return bytes until the first occurrence of the stop byte.
 
-        The stop character is not returned, but silently dropped from
-        the remaining stream data.
+        The stop byte is not returned, but silently dropped from the
+        remaining stream data.
         """
-        predicate = create_match_predicate(stop_character)
+        predicate = create_match_predicate(ord(stop_byte))
         return self._join(takewhile(predicate, self.iterator))
 
-    def read_until_inclusive(self, stop_character):
-        """Return characters until, and including, the first occurrence
-        of the stop character.
+    def read_until_inclusive(self, stop_byte):
+        """Return bytes until, and including, the first occurrence of
+        the stop byte.
         """
         def inner():
-            predicate = create_match_predicate(stop_character)
+            predicate = create_match_predicate(ord(stop_byte))
             for x in self.iterator:
                 yield x
                 if not predicate(x):
@@ -47,11 +46,11 @@ class Stream(object):
         return self._join(inner())
 
     def read_remainder(self):
-        """Return all remaining characters."""
+        """Return all remaining bytes."""
         return self._join(self.iterator)
 
     def _join(self, iterable):
-        return ''.join(iterable)
+        return bytes(iterable)
 
 
 def create_match_predicate(value_to_match):

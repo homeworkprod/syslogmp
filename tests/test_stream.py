@@ -13,17 +13,17 @@ from nose2.tools import params
 from syslogmp.stream import Stream
 
 
-LETTERS = 'abcdefghijklmnopqrstuvwxyz'
+LETTERS = b'abcdefghijklmnopqrstuvwxyz'
 
 
 class StreamTestCase(TestCase):
 
     @params(
-        (LETTERS,                0, ''                          ),
-        (LETTERS,                1, 'a'                         ),
-        (LETTERS,                2, 'ab'                        ),
-        (LETTERS, len(LETTERS)    , 'abcdefghijklmnopqrstuvwxyz'),
-        (LETTERS, len(LETTERS) + 1, 'abcdefghijklmnopqrstuvwxyz'),
+        (LETTERS,                0, b''                          ),
+        (LETTERS,                1, b'a'                         ),
+        (LETTERS,                2, b'ab'                        ),
+        (LETTERS, len(LETTERS)    , b'abcdefghijklmnopqrstuvwxyz'),
+        (LETTERS, len(LETTERS) + 1, b'abcdefghijklmnopqrstuvwxyz'),
     )
     def test_read(self, data, n, expected):
         stream = Stream(data)
@@ -37,10 +37,10 @@ class StreamTestCase(TestCase):
             stream.read(-1)
 
     @params(
-        ('abcdef', 'a', ''      ),
-        ('abcdef', 'b', 'a'     ),
-        ('abcdef', 'c', 'ab'    ),
-        ('abcdef', 'z', 'abcdef'),  # Stop character not in data; return everything.
+        (b'abcdef', b'a', b''      ),
+        (b'abcdef', b'b', b'a'     ),
+        (b'abcdef', b'c', b'ab'    ),
+        (b'abcdef', b'z', b'abcdef'),  # Stop character not in data; return everything.
     )
     def test_read_until(self, data, stop_character, expected):
         stream = Stream(data)
@@ -48,19 +48,19 @@ class StreamTestCase(TestCase):
         self.assertEqual(actual, expected)
 
     def test_read_until_drops_stop_character(self):
-        stream = Stream('abcdef')
+        stream = Stream(b'abcdef')
 
-        until = stream.read_until('d')
-        self.assertEqual(until, 'abc')
+        until = stream.read_until(b'd')
+        self.assertEqual(until, b'abc')
 
         remainder = stream.read_remainder()
-        self.assertEqual(remainder, 'ef')
+        self.assertEqual(remainder, b'ef')
 
     @params(
-        ('abcdef', 'a', 'a'     ),
-        ('abcdef', 'b', 'ab'    ),
-        ('abcdef', 'c', 'abc'   ),
-        ('abcdef', 'z', 'abcdef'),  # Stop character not in data; return everything.
+        (b'abcdef', b'a', b'a'     ),
+        (b'abcdef', b'b', b'ab'    ),
+        (b'abcdef', b'c', b'abc'   ),
+        (b'abcdef', b'z', b'abcdef'),  # Stop character not in data; return everything.
     )
     def test_read_until_inclusive(self, data, stop_character, expected):
         stream = Stream(data)
@@ -77,4 +77,4 @@ class StreamTestCase(TestCase):
         stream.read(20)
 
         actual = stream.read_remainder()
-        self.assertEqual(actual, 'uvwxyz')
+        self.assertEqual(actual, b'uvwxyz')

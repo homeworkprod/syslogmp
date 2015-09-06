@@ -53,7 +53,7 @@ class Parser(object):
 
     def _parse_pri_part(self):
         """Extract facility and severity from the PRI part."""
-        pri_part = self.stream.read_until_inclusive('>')
+        pri_part = self.stream.read_until_inclusive(b'>')
 
         return PriorityValue.from_pri_part(pri_part)
 
@@ -65,18 +65,20 @@ class Parser(object):
 
     def _parse_timestamp(self):
         """Parse timestamp into a `datetime` instance."""
-        timestamp_str = self.stream.read(15)
+        timestamp_bytes = self.stream.read(15)
+        timestamp_ascii = timestamp_bytes.decode('ascii')
 
-        nothing = self.stream.read_until(' ')  # Advance to next part.
-        ensure(nothing == '',
+        nothing = self.stream.read_until(b' ')  # Advance to next part.
+        ensure(nothing == b'',
                'Timestamp must be followed by a space character.')
 
-        timestamp = datetime.strptime(timestamp_str, '%b %d %H:%M:%S')
+        timestamp = datetime.strptime(timestamp_ascii, '%b %d %H:%M:%S')
         timestamp = timestamp.replace(year=datetime.today().year)
         return timestamp
 
     def _parse_hostname(self):
-        return self.stream.read_until(' ')
+        hostname_bytes = self.stream.read_until(b' ')
+        return hostname_bytes.decode('ascii')
 
     def _parse_msg_part(self):
         return self.stream.read_remainder()
@@ -88,12 +90,12 @@ class PriorityValue(namedtuple('PriorityValue', 'facility severity')):
     def from_pri_part(cls, pri_part):
         """Create instance from PRI part."""
         ensure(len(pri_part) in {3, 4, 5},
-               'PRI part must have 3, 4, or 5 characters.')
+               'PRI part must have 3, 4, or 5 bytes.')
 
-        ensure(pri_part.startswith('<'),
+        ensure(pri_part.startswith(b'<'),
                'PRI part must start with an opening angle bracket (`<`).')
 
-        ensure(pri_part.endswith('>'),
+        ensure(pri_part.endswith(b'>'),
                'PRI part must end with a closing angle bracket (`>`).')
 
         priority_value = pri_part[1:-1]
