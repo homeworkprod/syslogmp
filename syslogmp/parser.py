@@ -27,6 +27,7 @@ latter.
 from collections import namedtuple
 from datetime import datetime
 
+from .compat import binary_type
 from .facility import Facility
 from .message import Message
 from .severity import Severity
@@ -48,6 +49,8 @@ class Parser(object):
                        timestamp, hostname, message)
 
     def __init__(self, data):
+        ensure(isinstance(data, binary_type), 'Data must be a byte string.')
+
         max_bytes = 1024  # as stated by the RFC
         self.stream = Stream(data[:max_bytes])
 

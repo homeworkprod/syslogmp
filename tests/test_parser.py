@@ -88,6 +88,7 @@ class ParseTestCase(TestCase):
         self.assertEqual(actual.message, expected_message)
 
     @params(
+        ( '<165>Nov 14 12:34:56 localhost foobar' ), # not a byte string
         (b'165>Nov 14 12:34:56 localhost foobar'  ), # PRI part not starting with '<'
         (b'<165 Nov 14 12:34:56 localhost foobar' ), # PRI part not ending with '>'
         (b'<>Nov 14 12:34:56 localhost foobar'    ), # priority value too short
