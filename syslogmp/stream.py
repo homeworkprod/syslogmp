@@ -23,7 +23,7 @@ class Stream(object):
 
     def read(self, n):
         """Return the next `n` bytes."""
-        return self._join(islice(self.iterator, n))
+        return join(islice(self.iterator, n))
 
     def read_until(self, stop_byte):
         """Return bytes until the first occurrence of the stop byte.
@@ -32,7 +32,7 @@ class Stream(object):
         remaining stream data.
         """
         predicate = create_match_predicate(stop_byte)
-        return self._join(takewhile(predicate, self.iterator))
+        return join(takewhile(predicate, self.iterator))
 
     def read_until_inclusive(self, stop_byte):
         """Return bytes until, and including, the first occurrence of
@@ -45,17 +45,11 @@ class Stream(object):
                 if not predicate(x):
                     return
 
-        return self._join(inner())
+        return join(inner())
 
     def read_remainder(self):
         """Return all remaining bytes."""
-        return self._join(self.iterator)
-
-    def _join(self, iterable):
-        if PYTHON3:
-            return bytes(iterable)
-        else:
-            return ''.join(iterable)
+        return join(self.iterator)
 
 
 def create_match_predicate(value_to_match):
@@ -63,3 +57,10 @@ def create_match_predicate(value_to_match):
         value_to_match = ord(value_to_match)
 
     return lambda x: x != value_to_match
+
+
+def join(iterable):
+    if PYTHON3:
+        return bytes(iterable)
+    else:
+        return ''.join(iterable)
