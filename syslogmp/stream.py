@@ -30,7 +30,7 @@ class Stream(object):
         The stop character is not returned, but silently dropped from
         the remaining stream data.
         """
-        predicate = lambda c: c != stop_character
+        predicate = create_match_predicate(stop_character)
         return self._join(takewhile(predicate, self.iterator))
 
     def read_until_inclusive(self, stop_character):
@@ -38,7 +38,7 @@ class Stream(object):
         of the stop character.
         """
         def inner():
-            predicate = lambda c: c != stop_character
+            predicate = create_match_predicate(stop_character)
             for x in self.iterator:
                 yield x
                 if not predicate(x):
@@ -52,3 +52,7 @@ class Stream(object):
 
     def _join(self, iterable):
         return ''.join(iterable)
+
+
+def create_match_predicate(value_to_match):
+    return lambda x: x != value_to_match
