@@ -82,19 +82,6 @@ class Parser(object):
         return self.stream.read_remainder()
 
 
-class MessageFormatError(ValueError):
-    """Raised when data does not match the expected message structure."""
-
-    def __init__(self, message):
-        self.message = message
-
-
-def ensure(expression, error_message):
-    """Raise exception if the expression evaluates to `False`."""
-    if not expression:
-        raise MessageFormatError(error_message)
-
-
 class PriorityValue(namedtuple('PriorityValue', 'facility severity')):
 
     @classmethod
@@ -124,3 +111,16 @@ class PriorityValue(namedtuple('PriorityValue', 'facility severity')):
         severity = Severity(severity_id)
 
         return cls(facility, severity)
+
+
+def ensure(expression, error_message):
+    """Raise exception if the expression evaluates to `False`."""
+    if not expression:
+        raise MessageFormatError(error_message)
+
+
+class MessageFormatError(ValueError):
+    """Raised when data does not match the expected message structure."""
+
+    def __init__(self, message):
+        self.message = message
