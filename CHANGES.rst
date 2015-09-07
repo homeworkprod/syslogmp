@@ -2,8 +2,8 @@ syslogmp Changelog
 ==================
 
 
-Version 0.2 (not yet released)
-------------------------------
+Version 0.2 (released on 07-Sep-2015)
+-------------------------------------
 
 - Data is required to be a byte string.
 - Raise custom exception on message parsing errors instead of using
