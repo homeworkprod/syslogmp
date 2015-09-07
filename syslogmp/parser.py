@@ -10,6 +10,8 @@ A message consists of three parts:
 - HEADER (timestamp, hostname/IP address)
 - MSG (additional information, text)
 
+Its length must not exceed 1024 bytes.
+
 For more information, see `RFC 3164`_, "The BSD syslog Protocol".
 
 Please note that there is `RFC 5424`_, "The Syslog Protocol", which
@@ -34,6 +36,9 @@ from .severity import Severity
 from .stream import Stream
 
 
+MAX_MESSAGE_LENGTH = 1024
+
+
 class Parser(object):
     """Parse syslog messages."""
 
@@ -51,8 +56,10 @@ class Parser(object):
     def __init__(self, data):
         ensure(isinstance(data, binary_type), 'Data must be a byte string.')
 
-        max_bytes = 1024  # as stated by the RFC
-        self.stream = Stream(data[:max_bytes])
+        ensure(len(data) <= MAX_MESSAGE_LENGTH,
+               'Message must not be longer than 1024 bytes.')
+
+        self.stream = Stream(data)
 
     def _parse_pri_part(self):
         """Extract facility and severity from the PRI part."""

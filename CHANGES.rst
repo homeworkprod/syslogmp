@@ -8,6 +8,8 @@ Version 0.2 (not yet released)
 - Data is required to be a byte string.
 - Raise custom exception on message parsing errors instead of using
   assertions.
+- Raise exception if message is too long instead of truncating and
+  processing it.
 
 
 Version 0.1.1 (released on 10-Aug-2015)

@@ -18,6 +18,18 @@ from syslogmp.parser import MessageFormatError
 CURRENT_YEAR = datetime.today().year
 
 
+def create_long_data(length):
+    data = b'<13>Sep  5 23:50:37 localhost '
+    return pad_data(data, length, b'x')
+
+
+def pad_data(value, width, fillbyte):
+    """Append the fill byte to the end of the value until it has the
+    requested width.
+    """
+    return value.ljust(width, fillbyte)
+
+
 class ParseTestCase(TestCase):
 
     @params(
@@ -87,8 +99,14 @@ class ParseTestCase(TestCase):
         self.assertEqual(actual.hostname, expected_hostname)
         self.assertEqual(actual.message, expected_message)
 
+    def test_parse_message_just_not_too_long(self):
+        data = create_long_data(1024)
+        self.assertEqual(len(data), 1024)
+        parse(data)
+
     @params(
         ( '<165>Nov 14 12:34:56 localhost foobar' ), # not a byte string
+        (create_long_data(1025)                   ), # whole message too long
         (b'165>Nov 14 12:34:56 localhost foobar'  ), # PRI part not starting with '<'
         (b'<165 Nov 14 12:34:56 localhost foobar' ), # PRI part not ending with '>'
         (b'<>Nov 14 12:34:56 localhost foobar'    ), # priority value too short
