@@ -5,7 +5,7 @@ syslogmp Changelog
 Version 0.2.1
 -------------
 
-not yet released
+Released September 8, 2015
 
 - Added missing files to distribution.
 
