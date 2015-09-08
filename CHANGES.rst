@@ -2,8 +2,10 @@ syslogmp Changelog
 ==================
 
 
-Version 0.2 (released on 07-Sep-2015)
--------------------------------------
+Version 0.2
+-----------
+
+Released September 7, 2015
 
 - Data is required to be a byte string.
 - Raise custom exception on message parsing errors instead of using
@@ -12,13 +14,17 @@ Version 0.2 (released on 07-Sep-2015)
   processing it.
 
 
-Version 0.1.1 (released on 10-Aug-2015)
----------------------------------------
+Version 0.1.1
+-------------
+
+Released August 10, 2015
 
 - Fixed packaging issue.
 
 
-Version 0.1 (released on 10-Aug-2015)
--------------------------------------
+Version 0.1
+-----------
+
+Released August 10, 2015
 
 - first official release
