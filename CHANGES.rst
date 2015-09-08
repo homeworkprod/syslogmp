@@ -2,6 +2,14 @@ syslogmp Changelog
 ==================
 
 
+Version 0.2.1
+-------------
+
+not yet released
+
+- Added missing files to distribution.
+
+
 Version 0.2
 -----------
 
