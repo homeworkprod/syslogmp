@@ -7,7 +7,7 @@ syslogmp.stream
 Treat binary data as a stream and provide methods to read from it.
 
 
-:Copyright: 2007-2015 Jochen Kupperschmidt
+:Copyright: 2007-2016 Jochen Kupperschmidt
 :License: MIT, see LICENSE for details.
 """
 

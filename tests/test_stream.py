@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-:Copyright: 2007-2015 Jochen Kupperschmidt
+:Copyright: 2007-2016 Jochen Kupperschmidt
 :License: MIT, see LICENSE for details.
 """
 

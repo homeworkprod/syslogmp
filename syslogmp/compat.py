@@ -7,7 +7,7 @@ syslogmp.compat
 Python 2/3 compatibility
 
 
-:Copyright: 2007-2015 Jochen Kupperschmidt
+:Copyright: 2007-2016 Jochen Kupperschmidt
 :License: MIT, see LICENSE for details.
 """
 
