@@ -45,6 +45,6 @@ setup(
     ],
     packages=['syslogmp'],
     install_requires=install_requires,
-    tests_require=['nose2', 'tox'],
+    tests_require=['freezegun>=0.3.6', 'nose2', 'tox'],
     test_suite='nose2.collector.collector',
 )

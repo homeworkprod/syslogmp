@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 from datetime import datetime
 from unittest import TestCase
 
+from freezegun import freeze_time
 from nose2.tools import params
 
 from syslogmp import Facility, parse, Severity
@@ -121,3 +122,32 @@ class ParseTestCase(TestCase):
     def test_parse_erroneous_message(self, data):
         with self.assertRaises(MessageFormatError):
             parse(data)
+
+    @params(
+        (2012),
+        (2016),
+        (2020),
+    )
+    def test_parse_leap_day_in_leap_year(self, current_year):
+        data = b'<165>Feb 29 19:56:43 localhost foobar'
+        fake_date = '{:d}-01-01'.format(current_year)
+        expected_timestamp = datetime(current_year, 2, 29, 19, 56, 43)
+
+        with freeze_time(fake_date):
+            actual = parse(data)
+
+        self.assertEqual(actual.timestamp, expected_timestamp)
+
+    @params(
+        (1900),
+        (2015),
+        (2017),
+        (2018),
+    )
+    def test_parse_leap_day_in_non_leap_year(self, current_year):
+        data = b'<165>Feb 29 19:56:43 localhost foobar'
+        fake_date = '{:d}-01-01'.format(current_year)
+
+        with self.assertRaises(MessageFormatError):
+            with freeze_time(fake_date):
+                parse(data)

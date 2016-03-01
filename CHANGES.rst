@@ -7,6 +7,9 @@ Version 0.2.2
 
 not yet released
 
+- Fixed `datetime.strptime` failing on February 29th. (Tests introduce
+  a test depedency on FreezeGun).
+
 
 Version 0.2.1
 -------------

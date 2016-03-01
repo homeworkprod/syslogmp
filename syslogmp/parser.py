@@ -85,12 +85,19 @@ class Parser(object):
         timestamp_bytes = self.stream.read(15)
         timestamp_ascii = timestamp_bytes.decode('ascii')
 
+        # Explicitly specify the current year to work around
+        # `datetime.strptime` failing on February 29th if no year is
+        # given ("ValueError: day is out of range for month") in which
+        # case the (non-leap) year 1900 would be used.
+        current_year = datetime.today().year
+        timestamp_ascii_with_year = '{:d} {}'.format(current_year,
+                                                     timestamp_ascii)
+
         try:
-            timestamp = datetime.strptime(timestamp_ascii, '%b %d %H:%M:%S')
+            timestamp = datetime.strptime(timestamp_ascii_with_year,
+                                          '%Y %b %d %H:%M:%S')
         except ValueError as e:
             raise MessageFormatError(e)
-
-        timestamp = timestamp.replace(year=datetime.today().year)
 
         return timestamp
 
