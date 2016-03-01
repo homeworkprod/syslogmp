@@ -5,7 +5,7 @@ syslogmp Changelog
 Version 0.2.2
 -------------
 
-not yet released
+Released March 1, 2016
 
 - Fixed `datetime.strptime` failing on February 29th. (Tests introduce
   a test depedency on FreezeGun).
