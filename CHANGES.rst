@@ -2,6 +2,12 @@ syslogmp Changelog
 ==================
 
 
+Version 0.2.2
+-------------
+
+not yet released
+
+
 Version 0.2.1
 -------------
 

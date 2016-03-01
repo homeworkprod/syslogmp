@@ -18,7 +18,7 @@ if sys.version_info[:2] < (3, 4):
 
 setup(
     name='syslogmp',
-    version='0.2.1',
+    version='0.2.2-dev',
     description='A parser for BSD syslog protocol (RFC 3164) messages',
     long_description=long_description,
     url='http://homework.nwsnet.de/releases/76d6/#syslogmp',

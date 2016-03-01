@@ -67,4 +67,4 @@ latter.
 :Copyright: 2007-2015 Jochen Kupperschmidt
 :Date: 08-Sep-2015
 :License: MIT, see LICENSE for details.
-:Version: 0.2.1
+:Version: 0.2.2-dev
