@@ -79,13 +79,14 @@ def pad_data(value, width, fillbyte):
     ],
 )
 def test_parse(
-        data,
-        expected_facility,
-        expected_facility_description,
-        expected_severity,
-        expected_timestamp,
-        expected_hostname,
-        expected_message):
+    data,
+    expected_facility,
+    expected_facility_description,
+    expected_severity,
+    expected_timestamp,
+    expected_hostname,
+    expected_message,
+):
     """Test parsing of a syslog message."""
     actual = parse(data)
 

@@ -47,14 +47,21 @@ class Parser(object):
         timestamp, hostname = parser._parse_header_part()
         message = parser._parse_msg_part()
 
-        return Message(priority_value.facility, priority_value.severity,
-                       timestamp, hostname, message)
+        return Message(
+            priority_value.facility,
+            priority_value.severity,
+            timestamp,
+            hostname,
+            message,
+        )
 
     def __init__(self, data):
         ensure(isinstance(data, bytes), 'Data must be a byte string.')
 
-        ensure(len(data) <= MAX_MESSAGE_LENGTH,
-               'Message must not be longer than 1024 bytes.')
+        ensure(
+            len(data) <= MAX_MESSAGE_LENGTH,
+            'Message must not be longer than 1024 bytes.',
+        )
 
         self.stream = Stream(data)
 
@@ -70,8 +77,9 @@ class Parser(object):
 
         # Advance to hostname.
         nothing = self.stream.read_until(b' ')
-        ensure(nothing == b'',
-               'Timestamp must be followed by a space character.')
+        ensure(
+            nothing == b'', 'Timestamp must be followed by a space character.'
+        )
 
         hostname = self._parse_hostname()
 
@@ -90,8 +98,9 @@ class Parser(object):
         timestamp_ascii_with_year = f'{current_year:d} {timestamp_ascii}'
 
         try:
-            timestamp = datetime.strptime(timestamp_ascii_with_year,
-                                          '%Y %b %d %H:%M:%S')
+            timestamp = datetime.strptime(
+                timestamp_ascii_with_year, '%Y %b %d %H:%M:%S'
+            )
         except ValueError as e:
             raise MessageFormatError(e)
 
@@ -106,18 +115,22 @@ class Parser(object):
 
 
 class PriorityValue(namedtuple('PriorityValue', 'facility severity')):
-
     @classmethod
     def from_pri_part(cls, pri_part):
         """Create instance from PRI part."""
-        ensure(len(pri_part) in {3, 4, 5},
-               'PRI part must have 3, 4, or 5 bytes.')
+        ensure(
+            len(pri_part) in {3, 4, 5}, 'PRI part must have 3, 4, or 5 bytes.'
+        )
 
-        ensure(pri_part.startswith(b'<'),
-               'PRI part must start with an opening angle bracket (`<`).')
+        ensure(
+            pri_part.startswith(b'<'),
+            'PRI part must start with an opening angle bracket (`<`).',
+        )
 
-        ensure(pri_part.endswith(b'>'),
-               'PRI part must end with a closing angle bracket (`>`).')
+        ensure(
+            pri_part.endswith(b'>'),
+            'PRI part must end with a closing angle bracket (`>`).',
+        )
 
         priority_value = pri_part[1:-1]
 
@@ -125,7 +138,8 @@ class PriorityValue(namedtuple('PriorityValue', 'facility severity')):
             priority_value_number = int(priority_value)
         except ValueError:
             raise MessageFormatError(
-                "Priority value must be a number, but is '{priority_value}'.")
+                "Priority value must be a number, but is '{priority_value}'."
+            )
 
         facility_id, severity_id = divmod(priority_value_number, 8)
 

@@ -13,7 +13,6 @@ from itertools import islice, takewhile
 
 
 class Stream(object):
-
     def __init__(self, data):
         self.iterator = iter(data)
 
@@ -34,6 +33,7 @@ class Stream(object):
         """Return bytes until, and including, the first occurrence of
         the stop byte.
         """
+
         def inner():
             predicate = create_match_predicate(stop_byte)
             for x in self.iterator:
