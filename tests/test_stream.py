@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
-
 """
 :Copyright: 2007-2016 Jochen Kupperschmidt
 :License: MIT, see LICENSE for details.
 """
 
-from __future__ import unicode_literals
 from unittest import TestCase
 
 from nose2.tools import params

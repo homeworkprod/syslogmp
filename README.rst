@@ -9,7 +9,7 @@ This library was extracted from syslog2IRC_.
 Requirements
 ------------
 
-- Python 2.7+ or 3.3+
+- Python 3.3+
 - enum34_ (on Python versions before 3.4)
 
 

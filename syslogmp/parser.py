@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 syslogmp.parser
 ~~~~~~~~~~~~~~~
@@ -29,7 +27,6 @@ latter.
 from collections import namedtuple
 from datetime import datetime
 
-from .compat import binary_type
 from .facility import Facility
 from .message import Message
 from .severity import Severity
@@ -54,7 +51,7 @@ class Parser(object):
                        timestamp, hostname, message)
 
     def __init__(self, data):
-        ensure(isinstance(data, binary_type), 'Data must be a byte string.')
+        ensure(isinstance(data, bytes), 'Data must be a byte string.')
 
         ensure(len(data) <= MAX_MESSAGE_LENGTH,
                'Message must not be longer than 1024 bytes.')

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 syslogmp.stream
 ~~~~~~~~~~~~~~~
@@ -13,8 +11,6 @@ Treat binary data as a stream and provide methods to read from it.
 
 from itertools import islice, takewhile
 
-from .compat import PYTHON3
-
 
 class Stream(object):
 
@@ -23,7 +19,7 @@ class Stream(object):
 
     def read(self, n):
         """Return the next `n` bytes."""
-        return join(islice(self.iterator, n))
+        return bytes(islice(self.iterator, n))
 
     def read_until(self, stop_byte):
         """Return bytes until the first occurrence of the stop byte.
@@ -32,7 +28,7 @@ class Stream(object):
         remaining stream data.
         """
         predicate = create_match_predicate(stop_byte)
-        return join(takewhile(predicate, self.iterator))
+        return bytes(takewhile(predicate, self.iterator))
 
     def read_until_inclusive(self, stop_byte):
         """Return bytes until, and including, the first occurrence of
@@ -45,22 +41,13 @@ class Stream(object):
                 if not predicate(x):
                     return
 
-        return join(inner())
+        return bytes(inner())
 
     def read_remainder(self):
         """Return all remaining bytes."""
-        return join(self.iterator)
+        return bytes(self.iterator)
 
 
 def create_match_predicate(value_to_match):
-    if PYTHON3:
-        value_to_match = ord(value_to_match)
-
+    value_to_match = ord(value_to_match)
     return lambda x: x != value_to_match
-
-
-def join(iterable):
-    if PYTHON3:
-        return bytes(iterable)
-    else:
-        return ''.join(iterable)
