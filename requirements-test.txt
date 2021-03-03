@@ -1,0 +1,2 @@
+nose2
+freezegun>=0.3.6
