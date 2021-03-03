@@ -135,7 +135,7 @@ def test_parse_erroneous_message(data):
 )
 def test_parse_leap_day_in_leap_year(current_year):
     data = b'<165>Feb 29 19:56:43 localhost foobar'
-    fake_date = '{:d}-01-01'.format(current_year)
+    fake_date = f'{current_year:d}-01-01'
     expected_timestamp = datetime(current_year, 2, 29, 19, 56, 43)
 
     with freeze_time(fake_date):
@@ -155,7 +155,7 @@ def test_parse_leap_day_in_leap_year(current_year):
 )
 def test_parse_leap_day_in_non_leap_year(current_year):
     data = b'<165>Feb 29 19:56:43 localhost foobar'
-    fake_date = '{:d}-01-01'.format(current_year)
+    fake_date = f'{current_year:d}-01-01'
 
     with pytest.raises(MessageFormatError):
         with freeze_time(fake_date):

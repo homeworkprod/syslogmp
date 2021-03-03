@@ -87,8 +87,7 @@ class Parser(object):
         # given ("ValueError: day is out of range for month") in which
         # case the (non-leap) year 1900 would be used.
         current_year = datetime.today().year
-        timestamp_ascii_with_year = '{:d} {}'.format(current_year,
-                                                     timestamp_ascii)
+        timestamp_ascii_with_year = f'{current_year:d} {timestamp_ascii}'
 
         try:
             timestamp = datetime.strptime(timestamp_ascii_with_year,
@@ -126,8 +125,7 @@ class PriorityValue(namedtuple('PriorityValue', 'facility severity')):
             priority_value_number = int(priority_value)
         except ValueError:
             raise MessageFormatError(
-                "Priority value must be a number, but is '{}'."
-                    .format(priority_value))
+                "Priority value must be a number, but is '{priority_value}'.")
 
         facility_id, severity_id = divmod(priority_value_number, 8)
 
