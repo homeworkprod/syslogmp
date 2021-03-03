@@ -7,8 +7,9 @@ Version 0.3
 
 Unreleased
 
-- Removed support for unsupported Python versions 2.7, 3.3, 3.4, and
+- Removed support for end-of-life Python versions 2.7, 3.3, 3.4, and
   3.5.
+
 - Added support for Python 3.6, 3.7, 3.8, and 3.9.
 
 
@@ -35,8 +36,10 @@ Version 0.2
 Released 2015-09-07
 
 - Data is required to be a byte string.
+
 - Raise custom exception on message parsing errors instead of using
   assertions.
+
 - Raise exception if message is too long instead of truncating and
   processing it.
 
