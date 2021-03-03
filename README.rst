@@ -9,8 +9,7 @@ This library was extracted from syslog2IRC_.
 Requirements
 ------------
 
-- Python 3.3+
-- enum34_ (on Python versions before 3.4)
+- Python 3.6+
 
 
 Installation
@@ -21,9 +20,6 @@ Install this package via pip_:
 .. code:: sh
 
     $ pip install syslogmp
-
-On Python versions before 3.4, the enum34_ package should be installed
-automatically.
 
 
 Usage
@@ -58,7 +54,6 @@ latter.
 
 
 .. _syslog2IRC: http://homework.nwsnet.de/releases/c474/#syslog2irc
-.. _enum34:     https://pypi.python.org/pypi/enum34
 .. _pip:        http://www.pip-installer.org/
 .. _RFC 3164:   http://tools.ietf.org/html/rfc3164
 .. _RFC 5424:   http://tools.ietf.org/html/rfc5424
