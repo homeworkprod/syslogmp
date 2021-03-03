@@ -4,10 +4,9 @@
 """
 
 from datetime import datetime
-from unittest import TestCase
 
 from freezegun import freeze_time
-from nose2.tools import params
+import pytest
 
 from syslogmp import Facility, parse, Severity
 from syslogmp.parser import MessageFormatError
@@ -28,9 +27,9 @@ def pad_data(value, width, fillbyte):
     return value.ljust(width, fillbyte)
 
 
-class ParseTestCase(TestCase):
-
-    @params(
+@pytest.mark.parametrize(
+    'data, expected_facility, expected_facility_description, expected_severity, expected_timestamp, expected_hostname, expected_message',
+    [
         (
             # Example 1 from RFC 3164.
             b'<34>Oct 11 22:14:15 mymachine su: \'su root\' failed for lonvick on /dev/pts/8',
@@ -77,32 +76,36 @@ class ParseTestCase(TestCase):
             'scapegoat',
             b'1990 Oct 22 10:52:01 TZ-6 scapegoat.dmz.example.org 10.1.2.3 sched[0]: That\'s All Folks!',
         ),
-    )
-    def test_parse(
-            self,
-            data,
-            expected_facility,
-            expected_facility_description,
-            expected_severity,
-            expected_timestamp,
-            expected_hostname,
-            expected_message):
-        """Test parsing of a syslog message."""
-        actual = parse(data)
+    ],
+)
+def test_parse(
+        data,
+        expected_facility,
+        expected_facility_description,
+        expected_severity,
+        expected_timestamp,
+        expected_hostname,
+        expected_message):
+    """Test parsing of a syslog message."""
+    actual = parse(data)
 
-        self.assertEqual(actual.facility, expected_facility)
-        self.assertEqual(actual.facility.description, expected_facility_description)
-        self.assertEqual(actual.severity, expected_severity)
-        self.assertEqual(actual.timestamp, expected_timestamp)
-        self.assertEqual(actual.hostname, expected_hostname)
-        self.assertEqual(actual.message, expected_message)
+    assert actual.facility == expected_facility
+    assert actual.facility.description == expected_facility_description
+    assert actual.severity == expected_severity
+    assert actual.timestamp == expected_timestamp
+    assert actual.hostname == expected_hostname
+    assert actual.message == expected_message
 
-    def test_parse_message_just_not_too_long(self):
-        data = create_long_data(1024)
-        self.assertEqual(len(data), 1024)
-        parse(data)
 
-    @params(
+def test_parse_message_just_not_too_long():
+    data = create_long_data(1024)
+    assert len(data) == 1024
+    parse(data)
+
+
+@pytest.mark.parametrize(
+    'data',
+    [
         ( '<165>Nov 14 12:34:56 localhost foobar' ), # not a byte string
         (create_long_data(1025)                   ), # whole message too long
         (b'165>Nov 14 12:34:56 localhost foobar'  ), # PRI part not starting with '<'
@@ -115,36 +118,45 @@ class ParseTestCase(TestCase):
         # Example 4 from RFC 3164
         # Cannot be parsed because TIMESTAMP field format is invalid.
         (b'<0>1990 Oct 22 10:52:01 TZ-6 scapegoat.dmz.example.org 10.1.2.3 sched[0]: That\'s All Folks!'),
-    )
-    def test_parse_erroneous_message(self, data):
-        with self.assertRaises(MessageFormatError):
-            parse(data)
+    ],
+)
+def test_parse_erroneous_message(data):
+    with pytest.raises(MessageFormatError):
+        parse(data)
 
-    @params(
+
+@pytest.mark.parametrize(
+    'current_year',
+    [
         (2012),
         (2016),
         (2020),
-    )
-    def test_parse_leap_day_in_leap_year(self, current_year):
-        data = b'<165>Feb 29 19:56:43 localhost foobar'
-        fake_date = '{:d}-01-01'.format(current_year)
-        expected_timestamp = datetime(current_year, 2, 29, 19, 56, 43)
+    ],
+)
+def test_parse_leap_day_in_leap_year(current_year):
+    data = b'<165>Feb 29 19:56:43 localhost foobar'
+    fake_date = '{:d}-01-01'.format(current_year)
+    expected_timestamp = datetime(current_year, 2, 29, 19, 56, 43)
 
-        with freeze_time(fake_date):
-            actual = parse(data)
+    with freeze_time(fake_date):
+        actual = parse(data)
 
-        self.assertEqual(actual.timestamp, expected_timestamp)
+    assert actual.timestamp == expected_timestamp
 
-    @params(
+
+@pytest.mark.parametrize(
+    'current_year',
+    [
         (1900),
         (2015),
         (2017),
         (2018),
-    )
-    def test_parse_leap_day_in_non_leap_year(self, current_year):
-        data = b'<165>Feb 29 19:56:43 localhost foobar'
-        fake_date = '{:d}-01-01'.format(current_year)
+    ],
+)
+def test_parse_leap_day_in_non_leap_year(current_year):
+    data = b'<165>Feb 29 19:56:43 localhost foobar'
+    fake_date = '{:d}-01-01'.format(current_year)
 
-        with self.assertRaises(MessageFormatError):
-            with freeze_time(fake_date):
-                parse(data)
+    with pytest.raises(MessageFormatError):
+        with freeze_time(fake_date):
+            parse(data)
