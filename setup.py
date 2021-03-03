@@ -33,5 +33,6 @@ setup(
         'Topic :: System :: Networking :: Monitoring',
         'Topic :: System :: Systems Administration',
     ],
+    package_dir={'': 'src'},
     packages=['syslogmp'],
 )
