@@ -5,7 +5,7 @@ syslogmp Changelog
 Version 0.3
 -----------
 
-Unreleased
+Released 2021-03-03
 
 - Removed support for end-of-life Python versions 2.7, 3.3, 3.4, and
   3.5.

@@ -12,7 +12,7 @@ from .parser import Parser
 from .severity import Severity
 
 
-VERSION = '0.3-dev'
+VERSION = '0.3'
 
 
 def parse(data):
