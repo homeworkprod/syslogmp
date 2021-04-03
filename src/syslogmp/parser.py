@@ -24,7 +24,7 @@ latter.
 :License: MIT, see LICENSE for details.
 """
 
-from collections import namedtuple
+from dataclasses import dataclass
 from datetime import datetime
 
 from .facility import Facility
@@ -114,8 +114,10 @@ class _Parser:
         return self.stream.read_remainder()
 
 
-class PriorityValue(namedtuple('PriorityValue', 'facility severity')):
-    pass
+@dataclass(frozen=True)
+class PriorityValue:
+    facility: Facility
+    severity: Severity
 
 
 def _create_priority_value_from_pri_part(pri_part):

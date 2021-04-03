@@ -6,7 +6,17 @@ syslogmp.message
 :License: MIT, see LICENSE for details.
 """
 
-from collections import namedtuple
+from dataclasses import dataclass
+from datetime import datetime
+
+from .facility import Facility
+from .severity import Severity
 
 
-Message = namedtuple('Message', 'facility severity timestamp hostname message')
+@dataclass(frozen=True)
+class Message:
+    facility: Facility
+    severity: Severity
+    timestamp: datetime
+    hostname: str
+    message: bytes

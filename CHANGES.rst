@@ -9,6 +9,8 @@ Unreleased
 
 - Removed support for Python versions 3.6.
 
+- Turn namedtuples ``Message`` and ``PriorityValue`` into dataclasses.
+
 
 Version 0.3
 -----------
