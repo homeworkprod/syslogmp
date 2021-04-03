@@ -68,8 +68,7 @@ class Parser:
     def _parse_pri_part(self):
         """Extract facility and severity from the PRI part."""
         pri_part = self.stream.read_until_inclusive(b'>')
-
-        return PriorityValue.from_pri_part(pri_part)
+        return _create_priority_value_from_pri_part(pri_part)
 
     def _parse_header_part(self):
         """Extract timestamp and hostname from the HEADER part."""
@@ -115,38 +114,38 @@ class Parser:
 
 
 class PriorityValue(namedtuple('PriorityValue', 'facility severity')):
-    @classmethod
-    def from_pri_part(cls, pri_part):
-        """Create instance from PRI part."""
-        ensure(
-            len(pri_part) in {3, 4, 5}, 'PRI part must have 3, 4, or 5 bytes.'
+    pass
+
+
+def _create_priority_value_from_pri_part(pri_part):
+    """Create priority value from PRI part."""
+    ensure(len(pri_part) in {3, 4, 5}, 'PRI part must have 3, 4, or 5 bytes.')
+
+    ensure(
+        pri_part.startswith(b'<'),
+        'PRI part must start with an opening angle bracket (`<`).',
+    )
+
+    ensure(
+        pri_part.endswith(b'>'),
+        'PRI part must end with a closing angle bracket (`>`).',
+    )
+
+    priority_value = pri_part[1:-1]
+
+    try:
+        priority_value_number = int(priority_value)
+    except ValueError:
+        raise MessageFormatError(
+            "Priority value must be a number, but is '{priority_value}'."
         )
 
-        ensure(
-            pri_part.startswith(b'<'),
-            'PRI part must start with an opening angle bracket (`<`).',
-        )
+    facility_id, severity_id = divmod(priority_value_number, 8)
 
-        ensure(
-            pri_part.endswith(b'>'),
-            'PRI part must end with a closing angle bracket (`>`).',
-        )
+    facility = Facility(facility_id)
+    severity = Severity(severity_id)
 
-        priority_value = pri_part[1:-1]
-
-        try:
-            priority_value_number = int(priority_value)
-        except ValueError:
-            raise MessageFormatError(
-                "Priority value must be a number, but is '{priority_value}'."
-            )
-
-        facility_id, severity_id = divmod(priority_value_number, 8)
-
-        facility = Facility(facility_id)
-        severity = Severity(severity_id)
-
-        return cls(facility, severity)
+    return PriorityValue(facility=facility, severity=severity)
 
 
 def ensure(expression, error_message):
