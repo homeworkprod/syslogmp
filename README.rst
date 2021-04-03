@@ -9,7 +9,7 @@ This library was extracted from syslog2IRC_.
 Requirements
 ------------
 
-- Python 3.6+
+- Python 3.7+
 
 
 Installation
