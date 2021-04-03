@@ -36,7 +36,7 @@ from .stream import Stream
 MAX_MESSAGE_LENGTH = 1024
 
 
-class Parser(object):
+class Parser:
     """Parse syslog messages."""
 
     @classmethod

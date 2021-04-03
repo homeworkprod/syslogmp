@@ -12,7 +12,7 @@ Treat binary data as a stream and provide methods to read from it.
 from itertools import islice, takewhile
 
 
-class Stream(object):
+class Stream:
     def __init__(self, data):
         self.iterator = iter(data)
 
