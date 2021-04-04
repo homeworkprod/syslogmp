@@ -12,4 +12,4 @@ from .parser import parse
 from .severity import Severity
 
 
-VERSION = '0.4-dev'
+VERSION = '0.4'

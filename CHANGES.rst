@@ -5,7 +5,7 @@ Changelog
 Version 0.4
 -----------
 
-Unreleased
+Released 2021-04-04
 
 - Removed support for Python versions 3.6.
 
