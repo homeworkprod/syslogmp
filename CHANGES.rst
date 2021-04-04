@@ -1,5 +1,5 @@
-syslogmp Changelog
-==================
+Changelog
+=========
 
 
 Version 0.4
@@ -28,8 +28,8 @@ Version 0.2.2
 
 Released 2016-03-01
 
-- Fixed `datetime.strptime` failing on February 29th. (Tests introduce
-  a test depedency on FreezeGun).
+- Fixed ``datetime.strptime`` failing on February 29th. (Tests introduce
+  a test dependency on FreezeGun).
 
 
 Version 0.2.1
