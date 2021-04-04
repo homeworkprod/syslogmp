@@ -36,9 +36,9 @@ class Stream:
 
         def inner():
             predicate = create_match_predicate(stop_byte)
-            for x in self.iterator:
-                yield x
-                if not predicate(x):
+            for code_point in self.iterator:
+                yield code_point
+                if not predicate(code_point):
                     return
 
         return bytes(inner())
@@ -50,4 +50,4 @@ class Stream:
 
 def create_match_predicate(value_to_match):
     value_to_match = ord(value_to_match)
-    return lambda x: x != value_to_match
+    return lambda cp: cp != value_to_match
