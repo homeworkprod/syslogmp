@@ -12,6 +12,7 @@ Labels and numerical codes as seen in `RFC 3164`_.
 """
 
 from enum import Enum, unique
+from typing import Dict
 
 
 @unique
@@ -42,11 +43,11 @@ class Facility(Enum):
     local7 = 23
 
     @property
-    def description(self):
+    def description(self) -> str:
         return DESCRIPTIONS[self.value]
 
 
-DESCRIPTIONS = {
+DESCRIPTIONS: Dict[int, str] = {
     0: 'kernel messages',
     1: 'user-level messages',
     2: 'mail system',

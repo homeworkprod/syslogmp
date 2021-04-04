@@ -24,8 +24,10 @@ latter.
 :License: MIT, see LICENSE for details.
 """
 
+from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Tuple
 
 from .facility import Facility
 from .message import Message
@@ -33,10 +35,10 @@ from .severity import Severity
 from .stream import Stream
 
 
-MAX_MESSAGE_LENGTH = 1024
+MAX_MESSAGE_LENGTH: int = 1024
 
 
-def parse(data):
+def parse(data: bytes) -> Message:
     """Parse a syslog message."""
     parser = _Parser(data)
 
@@ -56,7 +58,7 @@ def parse(data):
 class _Parser:
     """Parse a syslog message."""
 
-    def __init__(self, data):
+    def __init__(self, data: bytes) -> None:
         ensure(isinstance(data, bytes), 'Data must be a byte string.')
 
         ensure(
@@ -66,12 +68,12 @@ class _Parser:
 
         self.stream = Stream(data)
 
-    def _parse_pri_part(self):
+    def _parse_pri_part(self) -> PriorityValue:
         """Extract facility and severity from the PRI part."""
         pri_part = self.stream.read_until_inclusive(b'>')
         return _create_priority_value_from_pri_part(pri_part)
 
-    def _parse_header_part(self):
+    def _parse_header_part(self) -> Tuple[datetime, str]:
         """Extract timestamp and hostname from the HEADER part."""
         timestamp = self._parse_timestamp()
 
@@ -85,7 +87,7 @@ class _Parser:
 
         return timestamp, hostname
 
-    def _parse_timestamp(self):
+    def _parse_timestamp(self) -> datetime:
         """Parse timestamp into a `datetime` instance."""
         timestamp_bytes = self.stream.read(15)
         timestamp_ascii = timestamp_bytes.decode('ascii')
@@ -106,11 +108,11 @@ class _Parser:
 
         return timestamp
 
-    def _parse_hostname(self):
+    def _parse_hostname(self) -> str:
         hostname_bytes = self.stream.read_until(b' ')
         return hostname_bytes.decode('ascii')
 
-    def _parse_msg_part(self):
+    def _parse_msg_part(self) -> bytes:
         return self.stream.read_remainder()
 
 
@@ -120,7 +122,7 @@ class PriorityValue:
     severity: Severity
 
 
-def _create_priority_value_from_pri_part(pri_part):
+def _create_priority_value_from_pri_part(pri_part: bytes) -> PriorityValue:
     """Create priority value from PRI part."""
     ensure(len(pri_part) in {3, 4, 5}, 'PRI part must have 3, 4, or 5 bytes.')
 
@@ -151,7 +153,7 @@ def _create_priority_value_from_pri_part(pri_part):
     return PriorityValue(facility=facility, severity=severity)
 
 
-def ensure(expression, error_message):
+def ensure(expression: bool, error_message: str) -> None:
     """Raise exception if the expression evaluates to `False`."""
     if not expression:
         raise MessageFormatError(error_message)

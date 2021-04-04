@@ -11,6 +11,8 @@ Unreleased
 
 - Turn namedtuples ``Message`` and ``PriorityValue`` into dataclasses.
 
+- Added type hints.
+
 
 Version 0.3
 -----------
