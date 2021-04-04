@@ -36,24 +36,25 @@ from .stream import Stream
 MAX_MESSAGE_LENGTH = 1024
 
 
-class Parser:
-    """Parse syslog messages."""
+def parse(data):
+    """Parse a syslog message."""
+    parser = _Parser(data)
 
-    @classmethod
-    def parse(cls, data):
-        parser = cls(data)
+    priority_value = parser._parse_pri_part()
+    timestamp, hostname = parser._parse_header_part()
+    message = parser._parse_msg_part()
 
-        priority_value = parser._parse_pri_part()
-        timestamp, hostname = parser._parse_header_part()
-        message = parser._parse_msg_part()
+    return Message(
+        facility=priority_value.facility,
+        severity=priority_value.severity,
+        timestamp=timestamp,
+        hostname=hostname,
+        message=message,
+    )
 
-        return Message(
-            priority_value.facility,
-            priority_value.severity,
-            timestamp,
-            hostname,
-            message,
-        )
+
+class _Parser:
+    """Parse a syslog message."""
 
     def __init__(self, data):
         ensure(isinstance(data, bytes), 'Data must be a byte string.')

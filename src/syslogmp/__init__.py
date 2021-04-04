@@ -8,13 +8,8 @@ syslogmp
 
 from .facility import Facility
 from .message import Message
-from .parser import Parser
+from .parser import parse
 from .severity import Severity
 
 
 VERSION = '0.4-dev'
-
-
-def parse(data):
-    """Parse data and return syslog message."""
-    return Parser.parse(data)
