@@ -159,6 +159,3 @@ def ensure(expression, error_message):
 
 class MessageFormatError(ValueError):
     """Raised when data does not match the expected message structure."""
-
-    def __init__(self, message):
-        self.message = message
