@@ -13,7 +13,7 @@ Version 0.4
 
 Released 2021-04-04
 
-- Removed support for Python versions 3.6.
+- Removed support for Python 3.6.
 
 - Turn namedtuples ``Message`` and ``PriorityValue`` into dataclasses.
 
@@ -75,4 +75,4 @@ Version 0.1
 
 Released 2015-08-10
 
-- first official release
+- Published first official release.
