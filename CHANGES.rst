@@ -2,14 +2,14 @@ Changelog
 =========
 
 
-Version 0.5
------------
+0.5
+---
 
 Unreleased
 
 
-Version 0.4
------------
+0.4
+---
 
 Released 2021-04-04
 
@@ -20,8 +20,8 @@ Released 2021-04-04
 - Added type hints.
 
 
-Version 0.3
------------
+0.3
+---
 
 Released 2021-03-03
 
@@ -31,8 +31,8 @@ Released 2021-03-03
 - Added support for Python 3.6, 3.7, 3.8, and 3.9.
 
 
-Version 0.2.2
--------------
+0.2.2
+-----
 
 Released 2016-03-01
 
@@ -40,16 +40,16 @@ Released 2016-03-01
   a test dependency on FreezeGun).
 
 
-Version 0.2.1
--------------
+0.2.1
+-----
 
 Released 2015-09-08
 
 - Added missing files to distribution.
 
 
-Version 0.2
------------
+0.2
+---
 
 Released 2015-09-07
 
@@ -62,16 +62,16 @@ Released 2015-09-07
   processing it.
 
 
-Version 0.1.1
--------------
+0.1.1
+-----
 
 Released 2015-08-10
 
 - Fixed packaging issue.
 
 
-Version 0.1
------------
+0.1
+---
 
 Released 2015-08-10
 
