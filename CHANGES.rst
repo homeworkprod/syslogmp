@@ -5,6 +5,8 @@ Changelog
 0.5 (unreleased)
 ----------------
 
+- Removed ``setup.py``.
+
 
 0.4 (2021-04-04)
 ----------------
