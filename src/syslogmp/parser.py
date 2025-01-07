@@ -20,7 +20,7 @@ latter.
 .. _RFC 5424: http://tools.ietf.org/html/rfc5424
 
 
-:Copyright: 2007-2021 Jochen Kupperschmidt
+:Copyright: 2007-2025 Jochen Kupperschmidt
 :License: MIT, see LICENSE for details.
 """
 
